@@ -1,0 +1,19 @@
+html {
+  font-family: system-ui, sans-serif;
+  font-size: 1.25rem;
+}
+
+
+body {
+  background-color: #ccc;
+}
+
+h2 {
+  text-align: center;
+}
+
+svg {
+  display: block;
+  margin: auto;
+  vertical-align: middle;
+}
