@@ -22,8 +22,10 @@ const markers = [
   //{ markerOffset: 15, name: "Lima", coordinates: [-77.0428, -12.0464] },
   //{ markerOffset: 15, name: "Lima", coordinates: [77.0428, 12.0464] }
 ];
+const geoPath =
+  "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
-const geoPath = "/world.json";
+const geoUrl = "/world.json";
 
 const geoPaths = {
   IND: {
