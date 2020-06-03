@@ -1,4 +1,4 @@
-import React, { memo, useRef, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import {
   ComposableMap,
   Geographies,
@@ -6,23 +6,20 @@ import {
   Marker,
   ZoomableGroup
 } from "react-simple-maps";
-import ReactDOM from 'react-dom';
 import { GiPositionMarker } from 'react-icons/gi';
-import {IconContext} from 'react-icons'
 import { Spring, config } from "react-spring/renderprops";
 import ReactTooltip from "react-tooltip";
-
+import { geoPath } from "d3-geo"
 
 const markers = [
 
   { color: "#085229", name: "Delhi", coordinates: [77.1193, 28.4897] },
   { color: "#085229", name: "Mumbai", coordinates: [72.8825, 19.7942] },
   { color: "#085229", name: "Chennai", coordinates: [80.2707, 13.0827] },
-  { color: "#a14a45", name: "Kolkata", coordinates: [88.3639, 22.5726] },
-  //{ markerOffset: 15, name: "Lima", coordinates: [-77.0428, -12.0464] },
-  //{ markerOffset: 15, name: "Lima", coordinates: [77.0428, 12.0464] }
+  { color: "#a14a45", name: "Kolkata", coordinates: [88.3639, 22.5726] }
 ];
-const geoPath =
+
+const geoPathWorld =
   "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
 const geoUrl = "/world.json";
@@ -64,14 +61,14 @@ const rounded = num => {
 const MapChart = ({ setTooltipContent }) => {
 
   const [detail, setDetail] = useState(false);
-  const [paths, setPaths] = useState(geoPath);
+  const [paths, setPaths] = useState(geoPathWorld);
   const [center, setCenter] = useState([0, 0]);
   const [zoom, setZoom] = useState(1);
   const [data, setData] = useState("")
 
-  const switchPaths = (a) => {
+  const switchPaths = (a, b) => {
     console.log(a);
-    paths: detail ? setPaths(geoPath) : setPaths("");
+    paths: detail ? setPaths(geoPathWorld) : setPaths("");
     center: detail ? setCenter([0, 0]) : setCenter(geoPaths[a].center);
     zoom: detail ? setZoom(1) : setZoom(5);
     detail: setDetail(!detail);
@@ -104,21 +101,24 @@ const MapChart = ({ setTooltipContent }) => {
                           setTooltipContent("");
                         }}
                         onClick={() => {
-                          //setTooltipContent("hello");
-                          if (geoPaths[geo.properties.ISO_A3]) { switchPaths(geo.properties.ISO_A3) } ;
-                          //console.log(geo.properties.ISO_A3);
+                          //const path = geoPath().projection(geo.projection())
+                          //const centroid = geo.projection().invert(path.centroid(geo))
+                          //switchPaths(geo.properties.ISO_A3, centroid );
+                          if (geoPaths[geo.properties.ISO_A3]) {
+                            switchPaths(geo.properties.ISO_A3);
+                          }
                         }}
                         style={{
                           default: {
                             fill: geoPaths[geo.properties.ISO_A3] ? geoPaths[geo.properties.ISO_A3].color : "#889e92",
                             outline: "none",
-                            stroke: "#889e92",
+                            stroke: "#5c8a5a",
                             strokeWidth : 0.5
                           },
                           hover: {
                             fill: geoPaths[geo.properties.ISO_A3] ? geoPaths[geo.properties.ISO_A3].color : "#889e92",
                             outline: "none",
-                            stroke: "#889e92",
+                            stroke: "#5c8a5a",
                             strokeWidth : 0.5
                           },
                           pressed: {
@@ -133,19 +133,22 @@ const MapChart = ({ setTooltipContent }) => {
 
               {markers.map(({ name, coordinates, color }) => (
                 // <ReactTooltip>
-                  <Marker key={name} coordinates={coordinates}>
-                  <GiPositionMarker size={3} color={color}
+                  <Marker key={name} coordinates={coordinates}  >
+                  <GiPositionMarker size={3} color={color} x = {-1.5}
                     onMouseEnter={() => {
                       if(detail)
-                        setData(name);
+                        setData(`${name}`);
                     }}
                     onMouseLeave={() => {
+                      debugger;
                       setData("");
+                      console.log(data)
                     }}
                     data-tip={data} />
                      if(detail == true)
-                    <ReactTooltip></ReactTooltip>
-                  </Marker>
+                  <ReactTooltip></ReactTooltip>
+                  <text fontSize="3px" x = {-2} y = {5}>{name}</text>
+                </Marker>
 
                 ))}
 
